@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tesseract.js Offline</title>
+  <script src="../node_modules/tesseract.js/dist/tesseract.min.js"></script>
+  <script>
+    const { TesseractWorker } = Tesseract;
+    const worker = new TesseractWorker({
+      workerPath: '../node_modules/tesseract.js/dist/worker.min.js',
+      langPath: '../lang-data',
+      corePath: '../node_modules/tesseract.js-core/tesseract-core.js',
+    });
+
+    worker
+      .recognize('../images/testocr.png')
+      .progress((info) => {
+        console.log(info);
+      })
+      .then((result) => {
+        console.log(result.text);
+      });
+  </script>
+</head>
+<body>
+</body>
+</html>
