@@ -1,16 +1,16 @@
-const { TesseractWorker, OEM } = require('tesseract.js');
+const { createWorker } = require('tesseract.js');
 const path = require('path');
 
-const worker = new TesseractWorker({
+const worker = createWorker({
   langPath: path.join(__dirname, '..', 'lang-data'), 
+  logger: m => console.log(m),
 });
 
-worker
-  .recognize(path.join(__dirname, '..', 'images', 'thai.png'), 'tha', { tessedit_ocr_engine_mode: OEM.LSTM_ONLY })
-  .progress((info) => {
-    console.log(info);
-  })
-  .then((result) => {
-    console.log(result.text);
-    process.exit();
-  });
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('tha');
+  await worker.initialize('tha');
+  const { data: { text } } = await worker.recognize(path.join(__dirname, '..', 'images', 'tha.png'));
+  console.log(text);
+  await worker.terminate();
+})();
